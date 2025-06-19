@@ -30,11 +30,15 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     // Inscription d'un nouvel utilisateur
+    // Inscription d'un nouvel utilisateur
     public AuthResponse register(RegisterRequest request) {
         // Vérifier si l'email existe déjà
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Un utilisateur avec cet email existe déjà");
         }
+
+        // Déterminer le rôle (par défaut CONDUCTEUR si non spécifié)
+        Role userRole = request.getRole() != null ? request.getRole() : Role.CONDUCTEUR;
 
         // Créer un nouvel utilisateur
         User user = new User(
@@ -42,7 +46,7 @@ public class AuthService {
                 passwordEncoder.encode(request.getPassword()),
                 request.getNom(),
                 request.getPrenom(),
-                Role.CONDUCTEUR// Par défaut, nouveau utilisateur = CLIENT
+                userRole
         );
 
         // Sauvegarder l'utilisateur
@@ -52,8 +56,6 @@ public class AuthService {
         String jwtToken = jwtService.generateToken(user);
 
         return new AuthResponse(
-                jwtToken,
-                user.getEmail(),
                 user.getRole().name(),
                 user.getNom(),
                 user.getPrenom()

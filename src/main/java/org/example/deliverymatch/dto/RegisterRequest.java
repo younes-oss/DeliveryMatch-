@@ -1,23 +1,24 @@
 package org.example.deliverymatch.dto;
 
+import org.example.deliverymatch.entity.Role;
 
 public class RegisterRequest {
     private String email;
     private String password;
     private String nom;
     private String prenom;
+    private Role role;
 
-    // Constructeurs
     public RegisterRequest() {}
 
-    public RegisterRequest(String email, String password, String nom, String prenom) {
+    public RegisterRequest(String email, String password, String nom, String prenom, Role role) {
         this.email = email;
         this.password = password;
         this.nom = nom;
         this.prenom = prenom;
+        this.role = role;
     }
 
-    // Getters et Setters
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
@@ -29,4 +30,7 @@ public class RegisterRequest {
 
     public String getPrenom() { return prenom; }
     public void setPrenom(String prenom) { this.prenom = prenom; }
-}
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+} 

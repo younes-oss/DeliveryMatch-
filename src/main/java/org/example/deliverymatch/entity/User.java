@@ -5,13 +5,14 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type_utilisateur")
 public class User implements UserDetails {
 
     @Id
@@ -32,12 +33,16 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.CONDUCTEUR;
+    private Role role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "enabled")
     private boolean enabled = true;
+
+    @Column(name = "verified")
+    private boolean verified = false;
 
     // Constructeurs
     public User() {}
@@ -104,4 +109,7 @@ public class User implements UserDetails {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
+    public boolean isVerified() { return verified; }
+    public void setVerified(boolean verified) { this.verified = verified; }
 }

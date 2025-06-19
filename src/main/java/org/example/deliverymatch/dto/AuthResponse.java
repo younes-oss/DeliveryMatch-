@@ -16,6 +16,11 @@ public class AuthResponse {
         this.nom = nom;
         this.prenom = prenom;
     }
+    public AuthResponse( String nom, String prenom,String role) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.role = role;
+    }
 
     // Getters et Setters
     public String getToken() { return token; }
