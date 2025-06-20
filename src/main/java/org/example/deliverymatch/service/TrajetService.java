@@ -9,6 +9,8 @@ import org.example.deliverymatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TrajetService {
     @Autowired
@@ -27,5 +29,11 @@ public class TrajetService {
         trajet.setDateCreation(java.time.LocalDateTime.now());
         Trajet saved = trajetRepository.save(trajet);
         return trajetMapper.toDto(saved);
+    }
+
+    public List<TrajetDto> getAllTrajets() {
+        return trajetRepository.findAll().stream()
+                .map(trajetMapper::toDto)
+                .toList();
     }
 }

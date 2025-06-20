@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/trajets")
 public class TrajetController {
@@ -24,5 +26,10 @@ public class TrajetController {
         User conducteur = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
         TrajetDto created = trajetService.creerTrajet(trajetDto, conducteur.getId());
         return ResponseEntity.ok(created);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TrajetDto>> getAllTrajets() {
+        return ResponseEntity.ok(trajetService.getAllTrajets());
     }
 } 
