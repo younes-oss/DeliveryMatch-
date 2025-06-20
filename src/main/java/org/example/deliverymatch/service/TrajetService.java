@@ -36,4 +36,33 @@ public class TrajetService {
                 .map(trajetMapper::toDto)
                 .toList();
     }
+
+    public TrajetDto modifierTrajet(Long id, TrajetDto trajetDto, Long conducteurId) {
+        Trajet trajet = trajetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trajet non trouvé"));
+        if (!trajet.getConducteur().getId().equals(conducteurId)) {
+            throw new RuntimeException("Vous n'êtes pas autorisé à modifier ce trajet");
+        }
+        trajet.setLieuDepart(trajetDto.getLieuDepart());
+        trajet.setEtapesIntermediaires(trajetDto.getEtapesIntermediaires());
+        trajet.setDestination(trajetDto.getDestination());
+        trajet.setLongueurMax(trajetDto.getLongueurMax());
+        trajet.setLargeurMax(trajetDto.getLargeurMax());
+        trajet.setHauteurMax(trajetDto.getHauteurMax());
+        trajet.setTypeMarchandise(trajetDto.getTypeMarchandise());
+        trajet.setCapaciteDisponible(trajetDto.getCapaciteDisponible());
+        trajet.setDateDepart(trajetDto.getDateDepart());
+        trajet.setActif(trajetDto.isActif());
+        Trajet saved = trajetRepository.save(trajet);
+        return trajetMapper.toDto(saved);
+    }
+
+    public void supprimerTrajet(Long id, Long conducteurId) {
+        Trajet trajet = trajetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trajet non trouvé"));
+        if (!trajet.getConducteur().getId().equals(conducteurId)) {
+            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer ce trajet");
+        }
+        trajetRepository.deleteById(id);
+    }
 }

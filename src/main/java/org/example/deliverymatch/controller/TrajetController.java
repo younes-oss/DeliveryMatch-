@@ -32,4 +32,27 @@ public class TrajetController {
     public ResponseEntity<List<TrajetDto>> getAllTrajets() {
         return ResponseEntity.ok(trajetService.getAllTrajets());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TrajetDto> modifierTrajet(
+            @PathVariable Long id,
+            @RequestBody TrajetDto trajetDto,
+            Authentication authentication) {
+        String email = authentication.getName();
+        User conducteur = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
+        TrajetDto updated = trajetService.modifierTrajet(id, trajetDto, conducteur.getId());
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimerTrajet(
+            @PathVariable Long id,
+            Authentication authentication) {
+        String email = authentication.getName();
+        User conducteur = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
+        trajetService.supprimerTrajet(id, conducteur.getId());
+        return ResponseEntity.noContent().build();
+    }
 } 
