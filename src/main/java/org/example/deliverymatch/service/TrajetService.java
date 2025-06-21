@@ -65,4 +65,13 @@ public class TrajetService {
         }
         trajetRepository.deleteById(id);
     }
+
+    public List<TrajetDto> rechercherTrajets(String destination, java.time.LocalDateTime dateDepart, String typeMarchandise) {
+        return trajetRepository
+            .findByActifTrueAndDestinationContainingIgnoreCaseAndDateDepartAfterAndTypeMarchandiseContainingIgnoreCase(
+                destination, dateDepart, typeMarchandise)
+            .stream()
+            .map(trajetMapper::toDto)
+            .toList();
+    }
 }

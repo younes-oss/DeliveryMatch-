@@ -7,6 +7,7 @@ import org.example.deliverymatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class TrajetController {
     private UserRepository userRepository;
 
     @PostMapping
+    @PreAuthorize("hasRole('CONDUCTEUR')")
     public ResponseEntity<TrajetDto> creerTrajet(@RequestBody TrajetDto trajetDto, Authentication authentication) {
         // Supposons que le username = email
         String email = authentication.getName();
@@ -54,5 +56,15 @@ public class TrajetController {
             .orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
         trajetService.supprimerTrajet(id, conducteur.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TrajetDto>> rechercherTrajets(
+            @RequestParam String destination,
+            @RequestParam String dateDepart,
+            @RequestParam String typeMarchandise) {
+        java.time.LocalDateTime date = java.time.LocalDateTime.parse(dateDepart);
+        List<TrajetDto> result = trajetService.rechercherTrajets(destination, date, typeMarchandise);
+        return ResponseEntity.ok(result);
     }
 } 

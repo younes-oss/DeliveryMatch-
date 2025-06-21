@@ -14,4 +14,6 @@ public interface TrajetRepository extends JpaRepository<Trajet, Long> {
     List<Trajet> findByActifTrue();
     List<Trajet> findByActifTrueAndDateDepartAfter(LocalDateTime date);
     List<Trajet> findByActifTrueAndLieuDepartContainingAndDestinationContaining(String lieuDepart, String destination);
+    List<Trajet> findByActifTrueAndDestinationContainingIgnoreCaseAndDateDepartAfterAndTypeMarchandiseContainingIgnoreCase(
+        String destination, java.time.LocalDateTime dateDepart, String typeMarchandise);
 }
